@@ -84,10 +84,6 @@ fn main() {
             update_work_amounts(dir_entry.path().to_str().unwrap(), &lots[symbol_from_file_name]);
             println!(" - OK");
         } else {
-            if symbol_from_file_name == "MAGICUSDT" {
-                println!("===============================");
-                break;
-            }
             println!("- price not found for {}", symbol_from_file_name);
         }
     }
@@ -116,8 +112,7 @@ fn get_user_input_data() -> (u32, Vec<f64>) {
         multipliers_str = String::from("1 2 3 4 5");
     }
     let multipliers = multipliers_str.split(' ').filter_map(|s| s.trim().parse::<f64>().ok()).collect::<Vec<_>>();
-
-    println!("Ваша баховая сумма {} USDT и множители \"{}\"", main_amount_str, multipliers_str);
+    println!("Ваша базовая сумма {} USDT и множители \"{:?}\"", main_amount, multipliers);
 
     (main_amount, multipliers)
 }
@@ -136,6 +131,7 @@ fn update_work_amounts(path: &str, lots: &[f64; 5]) {
 
     let mut xml_file = OpenOptions::new().write(true).truncate(true).open(path).unwrap();
     let r = xml_file.write(doc.write_str().unwrap().as_bytes());
+    
     match r {
         Err(e) => println!("{:?}", e),
         _ => {}
